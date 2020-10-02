@@ -25,6 +25,6 @@ namespace WingtipSSO.POCOS
         public virtual ICollection<Role> Roles { get; set; }
     }
     public enum Role{
-        Admin, Modiater
+        Admin, Moderator, 
     }
 }
