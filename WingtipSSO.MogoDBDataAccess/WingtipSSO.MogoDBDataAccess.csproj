@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.0.0" />
+    <PackageReference Include="MongoDB.Driver" Version="2.11.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WingtipSSO.DataAccessLayer\WingtipSSO.DataAccessLayer.csproj" />
+    <ProjectReference Include="..\WingtipSSO.POCOS\WingtipSSO.POCOS.csproj" />
+  </ItemGroup>
+
+</Project>
