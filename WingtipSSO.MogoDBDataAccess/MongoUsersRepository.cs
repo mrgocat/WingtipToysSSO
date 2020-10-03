@@ -9,35 +9,64 @@ using WingtipSSO.POCOS;
 
 namespace WingtipSSO.MogoDBDataAccess
 {
-    public class MongoUsersRepository : IUsersRepository
+    public class MongoUsersRepository : MongoRepositoryBase, IUsersRepository
     {
         private readonly IMongoCollection<User> _users;
-        private readonly IMapper _mapper;
-        public MongoUsersRepository(IDatabaseSettings settings, IMapper mapper)
+        public MongoUsersRepository(IDatabaseSettings settings, IMapper mapper) : base(settings, mapper)
         {
-            var client = new MongoClient(settings.ConnectionString);
-            var database = client.GetDatabase(settings.DatabaseName);
-            _users = database.GetCollection<User>("Users");
-            _mapper = mapper;
+            _users = _database.GetCollection<User>("Users");
         }
-        public UserPoco Create(UserPoco poco)
+        public void Create(UserPoco poco)
         {
             User user = _mapper.Map<User>(poco);
             _users.InsertOne(user);
-            return poco;
         }
-
         public UserPoco Find(string id)
         {
-            var user = _users.Find(sub => sub.Id == id).SingleOrDefault();
+            var user = _users.Find(e => e.Id == id).SingleOrDefault();
             if (user == null) return null;
             return _mapper.Map<UserPoco>(user);
         }
 
         public IList<UserPoco> Read()
         {
-            var list = _users.Find(sub => true).ToList();
+            var list = _users.Find(e => true).ToList();
             return _mapper.Map<List<UserPoco>>(list);
+        }
+        public void Update(UserPoco poco)
+        {
+            var user = _users.Find(e => e.Id == poco.Id).SingleOrDefault();
+            if (user == null) return;
+
+            user.LastName = poco.LastName;
+            user.FirstName = poco.FirstName;
+            user.Email = poco.Email;
+            user.Nationality = poco.Nationality;
+            user.Telephone = poco.Telephone;
+            user.DateOfBirth = poco.DateOfBirth;
+            user.LastUpdated = DateTime.Now;
+
+            _users.ReplaceOne(e => e.Id == user.Id, user);
+        }
+
+        public void LockUser(string id)
+        {
+            var user = _users.Find(e => e.Id == id).SingleOrDefault();
+            if (user == null) return;
+            user.IsLocked = true;
+            user.LastUpdated = DateTime.Now;
+
+            _users.ReplaceOne(e => e.Id == user.Id, user);
+        }
+
+        public void UpdatePassword(string id, string passwordHash)
+        {
+            var user = _users.Find(e => e.Id == id).SingleOrDefault();
+            if (user == null) return;
+            user.PasswordHash = passwordHash;
+            user.LastUpdated = DateTime.Now;
+
+            _users.ReplaceOne(e => e.Id == user.Id, user);
         }
     }
 }

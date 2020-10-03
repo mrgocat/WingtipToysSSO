@@ -33,10 +33,14 @@ namespace WingtipSSO.WebApi.Controllers
         [HttpPost("login")]
         public ActionResult PostSecurityLogin([FromBody]UserLoginDto request)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             UserPoco poco = null;
             try
             {
-                poco = _service.Authenticate(request.UserId, request.Password);
+                poco = _service.Authenticate(request.UserId, request.Password, request.LoginIP);
             }
             catch (LoginException ex)
             {
@@ -60,6 +64,7 @@ namespace WingtipSSO.WebApi.Controllers
             var poco = _service.Get(userId);
             return Ok(_mapper.Map<UserDto>(poco));
         }
+        
         /*[HttpGet("{Id}")]
         public ActionResult Get(string userId)
         {
@@ -77,6 +82,50 @@ namespace WingtipSSO.WebApi.Controllers
             UserPoco poco = _mapper.Map<UserPoco>(dto);
             string userId = _service.Create(poco);
             return Created($"api/v1/users/{userId}", new { UserId = userId });
+        }
+
+        [HttpPut]
+        [Authorize]
+        public ActionResult Update([FromBody] UserUpdateDto dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var claimId = this.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier);
+            if (claimId == null)
+            {
+                return Unauthorized("Authentication Information required.");
+            }
+            string userId = claimId.Value;
+            UserPoco poco = _mapper.Map<UserPoco>(dto);
+            poco.Id = userId;
+            _service.Update(poco);
+            return NoContent();
+        }
+
+        [HttpPatch]
+        [HttpPut("{userId}")]
+        public ActionResult Patch([FromBody] UserPasswordChangeDto dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var claimId = this.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier);
+            if (claimId == null)
+            {
+                return Unauthorized("Authentication Information required.");
+            }
+            string userId = claimId.Value;
+            try
+            {
+                _service.UpdatePasswrod(userId, dto.OldPassword, dto.NewPassword);
+            }catch(UpdateException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            return NoContent();
         }
     }
 }

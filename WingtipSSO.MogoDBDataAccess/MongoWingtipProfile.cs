@@ -12,6 +12,9 @@ namespace WingtipSSO.MogoDBDataAccess
         public MongoWingtipProfile()
         {
             CreateMap<User, UserPoco>().ReverseMap();
+            CreateMap<UserLoginLog, UserLoginLogPoco>().ReverseMap();
+            CreateMap<UserHistory, UserHistoryPoco>().ReverseMap();
+            CreateMap<UserWrongPassword, UserWrongPasswordPoco>().ReverseMap();
         }
     }
 }

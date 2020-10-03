@@ -53,11 +53,18 @@ namespace WingtipSSO.WebApi
             });
 
             services.AddControllers();
+            
             services.AddAutoMapper(typeof(MongoWingtipProfile));
             services.AddAutoMapper(typeof(WingtipDtoProfile));
+
             services.Configure<DatabaseSettings>(Configuration.GetSection(nameof(DatabaseSettings)));
             services.AddSingleton<IDatabaseSettings>(x => x.GetRequiredService<IOptions<DatabaseSettings>>().Value);
+
             services.AddSingleton<IUsersRepository, MongoUsersRepository>();
+            services.AddSingleton<IUserLoginLogsRepository, MongoUserLoginLogsRepository>();
+            services.AddSingleton<IUserHistoriesRepository, MongoUserHistoriesRepository>();
+            services.AddSingleton<IUserWrongPasswordRepository, MongoUserWrongPasswordRepository>();
+
             services.AddScoped<IUserService, UserService>();
 
             services.AddScoped<IJwtProvider, JwtProvider>();

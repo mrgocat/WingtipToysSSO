@@ -15,4 +15,3 @@ namespace WingtipSSO.MogoDBDataAccess
         public string DatabaseName { get; set; }
     }
 }
-// https://developer.okta.com/blog/2020/06/29/aspnet-core-mongodb

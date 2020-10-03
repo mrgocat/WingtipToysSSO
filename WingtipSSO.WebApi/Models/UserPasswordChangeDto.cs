@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 
 namespace WingtipSSO.WebApi.Models
 {
-    public class UserLoginDto
+    public class UserPasswordChangeDto
     {
         [Required]
-        public string UserId { get; set; }
+        [DataType(DataType.Password)]
+        public string OldPassword { get; set; }
         [Required]
-        public string Password { get; set; }
-        public string LoginIP { get; set; }
+        [DataType(DataType.Password)]
+        public string NewPassword { get; set; }
     }
 }

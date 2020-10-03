@@ -14,6 +14,7 @@ namespace WingtipSSO.WebApi
         {
             CreateMap<UserPoco, UserDto>();
             CreateMap<UserCreateDto, UserPoco>();
+            CreateMap<UserUpdateDto, UserPoco>();
         }
     }
 }
