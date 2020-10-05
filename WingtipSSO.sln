@@ -9,9 +9,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WingtipSSO.POCOS", "Wingtip
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WingtipSSO.WebApi", "WingtipSSO.WebApi\WingtipSSO.WebApi.csproj", "{97DE2A3E-A128-4150-8038-E672E9707685}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WingtipSSO.MogoDBDataAccess", "WingtipSSO.MogoDBDataAccess\WingtipSSO.MogoDBDataAccess.csproj", "{400A8A0E-0686-4361-BC6C-291808F0F21A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WingtipSSO.MongoDBDataAccess", "WingtipSSO.MogoDBDataAccess\WingtipSSO.MongoDBDataAccess.csproj", "{400A8A0E-0686-4361-BC6C-291808F0F21A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WingtipSSO.BusinessLogicLayer", "WingtipSSO.BusinessLogicLayer\WingtipSSO.BusinessLogicLayer.csproj", "{3ACC42F7-52B8-46A6-BC45-76E52C933B67}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WingtipSSO.BusinessLogicLayer", "WingtipSSO.BusinessLogicLayer\WingtipSSO.BusinessLogicLayer.csproj", "{3ACC42F7-52B8-46A6-BC45-76E52C933B67}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{5852DC81-A92B-4C76-A7E3-054DC81646E3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WingtipSSO.DynamoDBAccess", "WingtipSSO.DynamoDBAccess\WingtipSSO.DynamoDBAccess.csproj", "{B08367DE-84A7-433D-8F8D-91813DF8FFB8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +43,14 @@ Global
 		{3ACC42F7-52B8-46A6-BC45-76E52C933B67}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3ACC42F7-52B8-46A6-BC45-76E52C933B67}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3ACC42F7-52B8-46A6-BC45-76E52C933B67}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5852DC81-A92B-4C76-A7E3-054DC81646E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5852DC81-A92B-4C76-A7E3-054DC81646E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5852DC81-A92B-4C76-A7E3-054DC81646E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5852DC81-A92B-4C76-A7E3-054DC81646E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B08367DE-84A7-433D-8F8D-91813DF8FFB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B08367DE-84A7-433D-8F8D-91813DF8FFB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B08367DE-84A7-433D-8F8D-91813DF8FFB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B08367DE-84A7-433D-8F8D-91813DF8FFB8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

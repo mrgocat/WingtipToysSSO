@@ -4,10 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using WingtipSSO.DataAccessLayer;
-using WingtipSSO.MogoDBDataAccess.Entities;
+using WingtipSSO.MongoDBDataAccess.Entities;
 using WingtipSSO.POCOS;
 
-namespace WingtipSSO.MogoDBDataAccess
+namespace WingtipSSO.MongoDBDataAccess
 {
     public class MongoUserHistoriesRepository : MongoRepositoryBase, IUserHistoriesRepository
     {

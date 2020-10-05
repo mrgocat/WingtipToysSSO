@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace WingtipSSO.MogoDBDataAccess.Entities
+namespace WingtipSSO.MongoDBDataAccess.Entities
 {
     public class UserWrongPassword
     {

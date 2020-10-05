@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using WingtipSSO.DataAccessLayer;
@@ -87,9 +88,19 @@ namespace WingtipSSO.BusinessLogicLayer
             };
             _userLoginLogsRepository.Create(poco);
         }
+        public bool CheckIdExists(string userId)
+        {
+            return _usersRepository.CheckIdExists(userId);
+        }
         public string Create(UserPoco poco)
         {
             poco.Id = poco.Email;
+
+            if (_usersRepository.CheckIdExists(poco.Id))
+            {
+                throw new UpdateException($"[{poco.Id}] alread has been taken.");
+            }
+            
             poco.IsActivated = true;
             poco.IsLocked = false;
             poco.Created = DateTime.Now;
@@ -129,13 +140,54 @@ namespace WingtipSSO.BusinessLogicLayer
                 throw new UpdateException("Password does not match");
             }
             string newPasswordHash = ComputeHash(newPassword, null);
-            _usersRepository.UpdatePassword(userId, newPasswordHash);
-            _userHistoriesRepository.Create(userId, userId, "Password update");
+            bool result = _usersRepository.UpdatePassword(userId, newPasswordHash);
+            if (result) _userHistoriesRepository.Create(userId, userId, "Password update");
+            else throw new UpdateException("Update failed!");
+        }
+        public void Patch(string userId, string key, string value)
+        {
+            PropertyInfo info = typeof(UserPoco).GetProperty(key);
+            if(info == null)
+            {
+                throw new UpdateException($"{key} is unknown field.");
+            }
+            Type propType = info.PropertyType;
+            MethodInfo generic = _usersRepository.GetType().GetMethod(nameof(_usersRepository.Patch));
+            generic = generic.MakeGenericMethod(propType);
+
+            object oValue = null;
+            Type strType = typeof(string);
+            if (propType == typeof(String))
+            {
+                oValue = value;
+            }
+            else
+            {
+                if (propType.IsGenericType && propType.GetGenericTypeDefinition() == typeof(Nullable<>))
+                {
+                    propType = propType.GetGenericArguments()[0];
+                    oValue = DateTime.Parse(value);
+                }
+                MethodInfo m = propType.GetMethod("Parse", new Type[] { strType });
+                if(m == null)
+                {
+                    throw new UpdateException("Cannot covert value.");
+                }
+                oValue = m.Invoke(null, new object[] { value });
+            }
+
+            object result = generic.Invoke(_usersRepository, new object[]
+            {
+                userId, key, oValue
+            });
+            if ((bool)result) _userHistoriesRepository.Create(userId, userId, $"{key} updated");
+            else throw new UpdateException("Update failed!");
         }
         public void Update(UserPoco poco)
         {
-            _usersRepository.Update(poco);
-            _userHistoriesRepository.Create(poco.Id, poco.Id, "Update Info");
+            bool result = _usersRepository.Update(poco);
+            if(result) _userHistoriesRepository.Create(poco.Id, poco.Id, "Update Info");
+            else throw new UpdateException("Update failed!");
         }
         public UserPoco Get(string userId)
         {

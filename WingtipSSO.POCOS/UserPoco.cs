@@ -22,7 +22,7 @@ namespace WingtipSSO.POCOS
         public DateTime Created { get; set; }
         public DateTime LastUpdated { get; set; }
 
-        public virtual ICollection<Role> Roles { get; set; }
+        public virtual IList<Role> Roles { get; set; }
     }
     public enum Role{
         Admin, Moderator, 

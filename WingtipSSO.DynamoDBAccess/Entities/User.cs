@@ -1,17 +1,14 @@
-﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-using MongoDB.Bson.Serialization.IdGenerators;
+﻿using Amazon.DynamoDBv2.DataModel;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace WingtipSSO.MongoDBDataAccess.Entities
+namespace WingtipSSO.DynamoDBAccess.Entities
 {
+    [DynamoDBTable("Users")]
     public class User
     {
-        //[BsonId]
-        //[BsonRepresentation(BsonType.ObjectId)]
-        [BsonId(IdGenerator = typeof(StringObjectIdGenerator))]
+        [DynamoDBHashKey]
         public string Id { get; set; }
         public string Email { get; set; }
         public string PasswordHash { get; set; }
@@ -28,6 +25,7 @@ namespace WingtipSSO.MongoDBDataAccess.Entities
         public DateTime Created { get; set; }
         public DateTime LastUpdated { get; set; }
 
-        public virtual IList<string> Roles { get; set; }
+        public string Roles { get; set; }
+
     }
 }

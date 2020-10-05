@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace WingtipSSO.MogoDBDataAccess
+namespace WingtipSSO.MongoDBDataAccess
 {
     public interface IDatabaseSettings
     {

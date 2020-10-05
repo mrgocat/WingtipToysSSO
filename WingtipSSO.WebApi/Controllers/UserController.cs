@@ -48,7 +48,7 @@ namespace WingtipSSO.WebApi.Controllers
             }
 
             var token = _jwtProvider.GenerateJwtToken(poco);
-            return Ok(token);
+            return Ok(new { token = token, username = poco.FirstName + " " + poco.LastName });
         }
 
         [HttpGet]
@@ -65,13 +65,13 @@ namespace WingtipSSO.WebApi.Controllers
             return Ok(_mapper.Map<UserDto>(poco));
         }
         
-        /*[HttpGet("{Id}")]
+        [HttpGet("{Id}/CheckIdExists")]
         public ActionResult Get(string userId)
         {
-            var poco = _service.Get(userId);
-            if (poco == null) return NotFound();
-            return Ok(_mapper.Map<UserDto>(poco));
-        }*/
+            bool result = _service.CheckIdExists(userId);
+            return Ok(new { Exists = result });
+        }
+
         [HttpPost]
         public ActionResult Create([FromBody]UserCreateDto dto)
         {
@@ -80,7 +80,15 @@ namespace WingtipSSO.WebApi.Controllers
                 return BadRequest(ModelState);
             }
             UserPoco poco = _mapper.Map<UserPoco>(dto);
-            string userId = _service.Create(poco);
+            string userId = null;
+            try
+            {
+                userId = _service.Create(poco);
+            }
+            catch(UpdateException ex)
+            {
+                return BadRequest(ex.Message);
+            }
             return Created($"api/v1/users/{userId}", new { UserId = userId });
         }
 
@@ -105,7 +113,7 @@ namespace WingtipSSO.WebApi.Controllers
         }
 
         [HttpPatch]
-        [HttpPut("{userId}")]
+        [HttpPut]
         public ActionResult Patch([FromBody] UserPasswordChangeDto dto)
         {
             if (!ModelState.IsValid)
@@ -122,6 +130,35 @@ namespace WingtipSSO.WebApi.Controllers
             {
                 _service.UpdatePasswrod(userId, dto.OldPassword, dto.NewPassword);
             }catch(UpdateException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            return NoContent();
+        }
+        [HttpPatch]
+        [HttpPut("{userId}")]
+        public ActionResult Patch(string userId, [FromBody] UserKeyValueDto dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            if(!UserKeyValueDto.AccecptedKeys.Any(e => e == dto.key))
+            {
+                return BadRequest($"You cannot change {dto.key} column");
+            }
+
+            var claimId = this.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier);
+            if (claimId == null)
+            {
+                return Unauthorized("Authentication Information required.");
+            }
+            userId = claimId.Value;
+            try
+            {
+                _service.Patch(userId, dto.key, dto.value);
+            }
+            catch (UpdateException ex)
             {
                 return BadRequest(ex.Message);
             }

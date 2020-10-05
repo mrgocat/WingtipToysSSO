@@ -2,10 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using WingtipSSO.MogoDBDataAccess.Entities;
+using WingtipSSO.MongoDBDataAccess.Entities;
 using WingtipSSO.POCOS;
 
-namespace WingtipSSO.MogoDBDataAccess
+namespace WingtipSSO.MongoDBDataAccess
 {
     public class MongoWingtipProfile : Profile
     {

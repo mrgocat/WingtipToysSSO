@@ -1,13 +1,14 @@
 ﻿using AutoMapper;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using WingtipSSO.DataAccessLayer;
-using WingtipSSO.MogoDBDataAccess.Entities;
+using WingtipSSO.MongoDBDataAccess.Entities;
 using WingtipSSO.POCOS;
 
-namespace WingtipSSO.MogoDBDataAccess
+namespace WingtipSSO.MongoDBDataAccess
 {
     public class MongoUsersRepository : MongoRepositoryBase, IUsersRepository
     {
@@ -27,16 +28,21 @@ namespace WingtipSSO.MogoDBDataAccess
             if (user == null) return null;
             return _mapper.Map<UserPoco>(user);
         }
-
+        public Boolean CheckIdExists(string userId)
+        {
+            var user = _users.Find(e => e.Id == userId).SingleOrDefault();
+            if (user == null) return true;
+            return false;
+        }
         public IList<UserPoco> Read()
         {
             var list = _users.Find(e => true).ToList();
             return _mapper.Map<List<UserPoco>>(list);
         }
-        public void Update(UserPoco poco)
+        public bool Update(UserPoco poco)
         {
             var user = _users.Find(e => e.Id == poco.Id).SingleOrDefault();
-            if (user == null) return;
+            if (user == null) return false;
 
             user.LastName = poco.LastName;
             user.FirstName = poco.FirstName;
@@ -47,26 +53,39 @@ namespace WingtipSSO.MogoDBDataAccess
             user.LastUpdated = DateTime.Now;
 
             _users.ReplaceOne(e => e.Id == user.Id, user);
+            return true;
         }
-
-        public void LockUser(string id)
+        public bool Patch<T>(string userId, string key, T value)
+        {
+            var user = _users.Find(e => e.Id == userId).SingleOrDefault();
+            if (user == null) return false;
+            
+            var filter = Builders<User>.Filter.Eq("Id", userId);
+            var update = Builders<User>.Update.Set("LastUpdated", DateTime.UtcNow);
+            update.Set(key, value);
+            _users.UpdateOne(filter, update);
+            return true;
+        }
+        public bool LockUser(string id)
         {
             var user = _users.Find(e => e.Id == id).SingleOrDefault();
-            if (user == null) return;
+            if (user == null) return false;
             user.IsLocked = true;
             user.LastUpdated = DateTime.Now;
 
             _users.ReplaceOne(e => e.Id == user.Id, user);
+            return true;
         }
 
-        public void UpdatePassword(string id, string passwordHash)
+        public bool UpdatePassword(string id, string passwordHash)
         {
             var user = _users.Find(e => e.Id == id).SingleOrDefault();
-            if (user == null) return;
+            if (user == null) return false;
             user.PasswordHash = passwordHash;
             user.LastUpdated = DateTime.Now;
 
             _users.ReplaceOne(e => e.Id == user.Id, user);
+            return true;
         }
     }
 }
