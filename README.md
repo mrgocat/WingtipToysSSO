@@ -1,7 +1,9 @@
 # WingtipToysSSO
 Single Sign On service using JWT and Azure Cosmos(Mongo DB) and AWS DynamoDB
 
+<pre>
 Configurations in appsettings.json file.
+
 JWT setting information :::
   "jwt": {
     "JwtKey": "JWT_KEY_atleast 16 characters length", 
@@ -21,3 +23,4 @@ Database setting information :::
     "ConnectionString": " azure connection string here ", // Azure Cosmos DB connection string. If you select MongoDB you have to set this value. 
     "DatabaseName": "wingtipsso" // If you select MongoDB you have to set this value.
   }
+</pre>
