@@ -113,6 +113,7 @@ namespace WingtipSSO.WebApi.Controllers
         }
 
         [HttpPatch]
+        [Authorize]
         public ActionResult Patch([FromBody] UserPasswordChangeDto dto)
         {
             if (!ModelState.IsValid)
@@ -135,6 +136,7 @@ namespace WingtipSSO.WebApi.Controllers
             return Ok(new { result = "ok" });
         }
         [HttpPatch("{userId}")]
+        [Authorize]
         public ActionResult Patch(string userId, [FromBody] UserKeyValueDto dto)
         {
             if (!ModelState.IsValid)
