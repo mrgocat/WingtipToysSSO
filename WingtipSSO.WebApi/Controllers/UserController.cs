@@ -109,11 +109,10 @@ namespace WingtipSSO.WebApi.Controllers
             UserPoco poco = _mapper.Map<UserPoco>(dto);
             poco.Id = userId;
             _service.Update(poco);
-            return NoContent();
+            return Ok(new { result = "ok" });
         }
 
         [HttpPatch]
-        [HttpPut]
         public ActionResult Patch([FromBody] UserPasswordChangeDto dto)
         {
             if (!ModelState.IsValid)
@@ -133,10 +132,9 @@ namespace WingtipSSO.WebApi.Controllers
             {
                 return BadRequest(ex.Message);
             }
-            return NoContent();
+            return Ok(new { result = "ok" });
         }
-        [HttpPatch]
-        [HttpPut("{userId}")]
+        [HttpPatch("{userId}")]
         public ActionResult Patch(string userId, [FromBody] UserKeyValueDto dto)
         {
             if (!ModelState.IsValid)
@@ -162,7 +160,7 @@ namespace WingtipSSO.WebApi.Controllers
             {
                 return BadRequest(ex.Message);
             }
-            return NoContent();
+            return Ok(new { result = "ok" });
         }
     }
 }
